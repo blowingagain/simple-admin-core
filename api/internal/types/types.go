@@ -417,6 +417,9 @@ type LoginReq struct {
 	// max length : 5
 	// min length : 5
 	Captcha string `json:"captcha" validate:"required,len=5"`
+	// The Region which users select | 用户选中的区域
+	// required : true
+	RegionId uint64 `json:"regionId" validate:"required"`
 }
 
 // Log in by email request | 邮箱登录参数
@@ -430,6 +433,9 @@ type LoginByEmailReq struct {
 	// max length : 5
 	// min length : 5
 	Captcha string `json:"captcha,optional" validate:"omitempty,len=5"`
+	// The Region which users select | 用户选中的区域
+	// required : true
+	RegionId uint64 `json:"regionId" validate:"required"`
 }
 
 // Log in by SMS request | 短信登录参数
@@ -443,6 +449,9 @@ type LoginBySmsReq struct {
 	// max length : 5
 	// min length : 5
 	Captcha string `json:"captcha,optional" validate:"omitempty,len=5"`
+	// The Region which users select | 用户选中的区域
+	// required : true
+	RegionId uint64 `json:"regionId" validate:"required"`
 }
 
 // The log in response data | 登录返回数据
