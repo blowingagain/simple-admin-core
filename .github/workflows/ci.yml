@@ -32,8 +32,14 @@ jobs:
           go env -w GOPROXY=https://goproxy.cn,direct
           go env -w GOPRIVATE=github.com
           go mod tidy
-          go build -trimpath -ldflags "-s -w" -o app api/core.go
+          go build -trimpath -ldflags "-s -w" -o core_api api/core.go
 
+      - name: Verify core_api exists
+        run: |
+          if [ ! -f core_api ]; then
+            echo "core_api file not found!"
+            exit 1
+          fi
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
