@@ -33,6 +33,7 @@ jobs:
           go env -w GOPRIVATE=github.com
           go mod tidy
           go build -trimpath -ldflags "-s -w" -o core_api api/core.go
+          go build -trimpath -ldflags "-s -w" -o core_rpc rpc/core.go
 
       - name: Verify core_api exists
         run: |
@@ -50,9 +51,16 @@ jobs:
           ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
         run: echo $ACR_PASSWORD | docker login $ACR_REGISTRY -u $ACR_USERNAME --password-stdin
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image - API
         env:
           ACR_REGISTRY: ${{ secrets.ACR_REGISTRY }}
         run: |
-          docker build -t $ACR_REGISTRY/dkzx_test/core-api-docker:${{ github.sha }} .
+          docker build -t $ACR_REGISTRY/dkzx_test/core-api-docker:${{ github.sha }} -f Dockerfile-api .
           docker push $ACR_REGISTRY/dkzx_test/core-api-docker:${{ github.sha }}
+
+      - name: Build and push Docker image - RPC
+        env:
+          ACR_REGISTRY: ${{ secrets.ACR_REGISTRY }}
+        run: |
+          docker build -t $ACR_REGISTRY/dkzx_test/core-rpc-docker:${{ github.sha }} -f Dockerfile-rpc .
+          docker push $ACR_REGISTRY/dkzx_test/core-rpc-docker:${{ github.sha }}
