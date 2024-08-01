@@ -55,12 +55,16 @@ jobs:
         env:
           ACR_REGISTRY: ${{ secrets.ACR_REGISTRY }}
         run: |
-          docker build -t $ACR_REGISTRY/dkzx_test/core-api-docker:${{ github.sha }} -f Dockerfile-api .
-          docker push $ACR_REGISTRY/dkzx_test/core-api-docker:${{ github.sha }}
+          docker build -t $ACR_REGISTRY/dkzx_test/core-api-docker:latest -f Dockerfile-api .
+          docker push $ACR_REGISTRY/dkzx_test/core-api-docker:latest
+      #          docker build -t $ACR_REGISTRY/dkzx_test/core-api-docker:${{ github.sha }} -f Dockerfile-api .
+      #          docker push $ACR_REGISTRY/dkzx_test/core-api-docker:${{ github.sha }}
 
       - name: Build and push Docker image - RPC
         env:
           ACR_REGISTRY: ${{ secrets.ACR_REGISTRY }}
         run: |
-          docker build -t $ACR_REGISTRY/dkzx_test/core-rpc-docker:${{ github.sha }} -f Dockerfile-rpc .
-          docker push $ACR_REGISTRY/dkzx_test/core-rpc-docker:${{ github.sha }}
+          docker build -t $ACR_REGISTRY/dkzx_test/core-rpc-docker:latest -f Dockerfile-rpc .
+          docker push $ACR_REGISTRY/dkzx_test/core-rpc-docker:latest
+#          docker build -t $ACR_REGISTRY/dkzx_test/core-rpc-docker:${{ github.sha }} -f Dockerfile-rpc .
+#          docker push $ACR_REGISTRY/dkzx_test/core-rpc-docker:${{ github.sha }}
