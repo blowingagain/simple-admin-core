@@ -302,6 +302,7 @@ message RoleListReq {
   optional string name = 3;
   optional string code = 4;
   optional string default_router = 5;
+  optional string remark = 6;
 }
 
 message RoleListResp {

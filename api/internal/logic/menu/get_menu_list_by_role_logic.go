@@ -2,6 +2,9 @@ package menu
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"strconv"
 
 	"github.com/suyuan32/simple-admin-common/i18n"
 	"github.com/suyuan32/simple-admin-common/utils/pointy"
@@ -29,6 +32,25 @@ func NewGetMenuListByRoleLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 
 func (l *GetMenuListByRoleLogic) GetMenuListByRole() (resp *types.MenuListResp, err error) {
 	roleId, _ := l.ctx.Value("roleId").(string)
+	// 2024-10-25 新增区域id 用于对菜单的加载对应其关联的省份
+	regionId := int64(0)
+	if jsonUid, ok := l.ctx.Value("regionId").(json.Number); ok {
+		if int64Uid, err := jsonUid.Int64(); err == nil {
+			regionId = int64Uid
+		} else {
+			err.Error()
+		}
+	}
+	fmt.Println("-----------------roleId: ", roleId, ",regionId:", regionId)
+	role, err := l.svcCtx.CoreRpc.GetRoleList(l.ctx, &core.RoleListReq{
+		Remark: pointy.GetPointer(strconv.Itoa(int(regionId))),
+	})
+	if err != nil {
+		return nil, err
+	}
+	if role.Total > 0 {
+		roleId = *role.Data[0].Code
+	}
 	data, err := l.svcCtx.CoreRpc.GetMenuListByRole(l.ctx, &core.BaseMsg{Msg: roleId})
 	if err != nil {
 		return nil, err

@@ -41,6 +41,9 @@ func (l *GetRoleListLogic) GetRoleList(in *core.RoleListReq) (*core.RoleListResp
 	if in.DefaultRouter != nil {
 		predicates = append(predicates, role.DefaultRouterContains(*in.DefaultRouter))
 	}
+	if in.Remark != nil {
+		predicates = append(predicates, role.RemarkEQ(*in.Remark))
+	}
 	result, err := l.svcCtx.DB.Role.Query().Where(predicates...).Page(l.ctx, in.Page, in.PageSize, func(pager *ent.RolePager) {
 		pager.Order = ent.Asc(role.FieldSort)
 	})
