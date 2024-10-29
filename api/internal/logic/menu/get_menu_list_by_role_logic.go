@@ -35,7 +35,7 @@ func (l *GetMenuListByRoleLogic) GetMenuListByRole() (resp *types.MenuListResp, 
 	// 将当前角色的id转为数组
 	roleIds := strings.Split(roleId, ",")
 	// 2024-10-25 新增区域id 用于对菜单的加载对应其关联的省份
-	regionId := int64(0)
+	regionId := int64(999)
 	if jsonUid, ok := l.ctx.Value("regionId").(json.Number); ok {
 		if int64Uid, err := jsonUid.Int64(); err == nil {
 			regionId = int64Uid
@@ -43,8 +43,8 @@ func (l *GetMenuListByRoleLogic) GetMenuListByRole() (resp *types.MenuListResp, 
 			err.Error()
 		}
 	}
-	// 如果为管理员 && 选择的为全国，则不做处理
-	if strings.Contains(roleId, "000") && regionId == 999 {
+	// 如果为管理员 && 选择的为全国-0，则不做处理
+	if strings.Contains(roleId, "000") && regionId == 0 {
 		roleId = "000"
 	} else {
 		fmt.Println("-----------------roleId: ", roleId, ",regionId:", regionId)

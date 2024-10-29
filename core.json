@@ -4859,8 +4859,7 @@
         "username",
         "password",
         "captchaId",
-        "captcha",
-        "regionId"
+        "captcha"
       ],
       "properties": {
         "captcha": {
@@ -4887,7 +4886,8 @@
         "regionId": {
           "description": "The Region which users select | 用户选中的区域",
           "type": "integer",
-          "format": "uint64",
+          "format": "int64",
+          "minimum": 0,
           "x-go-name": "RegionId"
         },
         "username": {

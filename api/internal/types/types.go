@@ -418,8 +418,8 @@ type LoginReq struct {
 	// min length : 5
 	Captcha string `json:"captcha" validate:"required,len=5"`
 	// The Region which users select | 用户选中的区域
-	// required : true
-	RegionId uint64 `json:"regionId" validate:"required"`
+	// min : 0
+	RegionId int64 `json:"regionId" validate:"gte=0"`
 }
 
 // Log in by email request | 邮箱登录参数
