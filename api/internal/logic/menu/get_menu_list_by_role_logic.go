@@ -45,7 +45,7 @@ func (l *GetMenuListByRoleLogic) GetMenuListByRole() (resp *types.MenuListResp, 
 	}
 	// 如果为管理员 && 选择的为全国，则不做处理
 	if strings.Contains(roleId, "000") && regionId == 999 {
-
+		roleId = "000"
 	} else {
 		fmt.Println("-----------------roleId: ", roleId, ",regionId:", regionId)
 		role, err := l.svcCtx.CoreRpc.GetRoleList(l.ctx, &core.RoleListReq{
