@@ -43,25 +43,32 @@ func (l *GetMenuListByRoleLogic) GetMenuListByRole() (resp *types.MenuListResp, 
 			err.Error()
 		}
 	}
-	fmt.Println("-----------------roleId: ", roleId, ",regionId:", regionId)
-	role, err := l.svcCtx.CoreRpc.GetRoleList(l.ctx, &core.RoleListReq{
-		Remark: pointy.GetPointer(strconv.Itoa(int(regionId))),
-	})
-	if err != nil {
-		return nil, err
-	}
-	if role.Total > 0 {
-		//fmt.Println("-------- 当前角色数据大于0")
-		for _, datum1 := range roleIds {
-			for _, datum := range role.Data {
-				if datum1 == *datum.Code {
-					// 最终匹配的菜单权限
-					roleId = *datum.Code
+	// 如果为管理员 && 选择的为全国，则不做处理
+	if strings.Contains(roleId, "000") && regionId == 999 {
+
+	} else {
+		fmt.Println("-----------------roleId: ", roleId, ",regionId:", regionId)
+		role, err := l.svcCtx.CoreRpc.GetRoleList(l.ctx, &core.RoleListReq{
+			Remark: pointy.GetPointer(strconv.Itoa(int(regionId))),
+		})
+		if err != nil {
+			return nil, err
+		}
+		if role.Total > 0 {
+			//fmt.Println("-------- 当前角色数据大于0")
+			for _, datum1 := range roleIds {
+				for _, datum := range role.Data {
+					if datum1 == *datum.Code {
+						// 最终匹配的菜单权限
+						roleId = *datum.Code
+					}
 				}
 			}
 		}
+		roleId = "-1"
+		fmt.Println("final-----------------roleId: ", roleId)
 	}
-	fmt.Println("final-----------------roleId: ", roleId)
+
 	data, err := l.svcCtx.CoreRpc.GetMenuListByRole(l.ctx, &core.BaseMsg{Msg: roleId})
 	if err != nil {
 		return nil, err
