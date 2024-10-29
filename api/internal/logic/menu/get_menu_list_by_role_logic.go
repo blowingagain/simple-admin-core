@@ -7,6 +7,7 @@ import (
 	"github.com/suyuan32/simple-admin-common/i18n"
 	"github.com/suyuan32/simple-admin-common/utils/pointy"
 	"strconv"
+	"strings"
 
 	"github.com/suyuan32/simple-admin-core/api/internal/svc"
 	"github.com/suyuan32/simple-admin-core/api/internal/types"
@@ -31,6 +32,8 @@ func NewGetMenuListByRoleLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 
 func (l *GetMenuListByRoleLogic) GetMenuListByRole() (resp *types.MenuListResp, err error) {
 	roleId, _ := l.ctx.Value("roleId").(string)
+	// 将当前角色的id转为数组
+	roleIds := strings.Split(roleId, ",")
 	// 2024-10-25 新增区域id 用于对菜单的加载对应其关联的省份
 	regionId := int64(0)
 	if jsonUid, ok := l.ctx.Value("regionId").(json.Number); ok {
@@ -48,8 +51,17 @@ func (l *GetMenuListByRoleLogic) GetMenuListByRole() (resp *types.MenuListResp, 
 		return nil, err
 	}
 	if role.Total > 0 {
-		roleId = *role.Data[0].Code
+		//fmt.Println("-------- 当前角色数据大于0")
+		for _, datum1 := range roleIds {
+			for _, datum := range role.Data {
+				if datum1 == *datum.Code {
+					// 最终匹配的菜单权限
+					roleId = *datum.Code
+				}
+			}
+		}
 	}
+	fmt.Println("final-----------------roleId: ", roleId)
 	data, err := l.svcCtx.CoreRpc.GetMenuListByRole(l.ctx, &core.BaseMsg{Msg: roleId})
 	if err != nil {
 		return nil, err
