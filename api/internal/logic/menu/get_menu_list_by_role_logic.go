@@ -64,9 +64,10 @@ func (l *GetMenuListByRoleLogic) GetMenuListByRole() (resp *types.MenuListResp, 
 					}
 				}
 			}
+		} else {
+			roleId = "-1"
+			fmt.Println("final-----------------roleId: ", roleId)
 		}
-		roleId = "-1"
-		fmt.Println("final-----------------roleId: ", roleId)
 	}
 
 	data, err := l.svcCtx.CoreRpc.GetMenuListByRole(l.ctx, &core.BaseMsg{Msg: roleId})
