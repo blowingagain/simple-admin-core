@@ -630,8 +630,8 @@ type MenuPlainInfo struct {
 	// max length : 300
 	Redirect *string `json:"redirect,optional" validate:"omitempty,max=300"`
 	// Component | 组件地址
-	// max length : 80
-	Component *string `json:"component,optional" validate:"omitempty,max=80"`
+	// max length : 300
+	Component *string `json:"component,optional" validate:"omitempty,max=300"`
 	// Sort | 排序
 	// max : 10000
 	Sort *uint32 `json:"sort,optional" validate:"omitempty,lt=10000"`
