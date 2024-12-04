@@ -10,6 +10,7 @@ import (
 	"github.com/suyuan32/simple-admin-common/utils/pointy"
 	"github.com/suyuan32/simple-admin-core/rpc/types/core"
 	"github.com/zeromicro/go-zero/core/errorx"
+	"strconv"
 	"strings"
 	"time"
 
@@ -53,12 +54,27 @@ func (l *AccessTokenLogic) AccessToken() (resp *types.RefreshTokenResp, err erro
 		return nil, errorx.NewApiUnauthorizedError(i18n.Failed)
 	}
 
+	// 获取 position id
+	userList, err := l.svcCtx.CoreRpc.GetUserList(l.ctx, &core.UserListReq{
+		Username: userData.Username,
+	})
+	if err != nil {
+		return nil, err
+	}
+	// 将整数切片转换为字符串切片
+	var stringSlice []string
+	for _, num := range userList.Data[0].PositionIds {
+		stringSlice = append(stringSlice, strconv.Itoa(int(num)))
+	}
+	// 使用 strings.Join 将字符串切片转换为逗号隔开的字符串
+	positionIds := strings.Join(stringSlice, ",")
+
 	token, err := jwt.NewJwtToken(l.svcCtx.Config.Auth.AccessSecret, time.Now().Unix(),
 		int64(l.svcCtx.Config.ProjectConf.AccessTokenPeriod)*60*60,
 		jwt.WithOption("userId", userId),
 		jwt.WithOption("roleId", strings.Join(roleIds, ",")),
 		jwt.WithOption("deptId", userData.DepartmentId),
-		jwt.WithOption("positionIds", userData.PositionIds))
+		jwt.WithOption("positionIds", positionIds))
 	if err != nil {
 		return nil, err
 	}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/suyuan32/simple-admin-common/config"
 	"github.com/suyuan32/simple-admin-common/enum/common"
+	"strconv"
 	"strings"
 	"time"
 
@@ -54,11 +55,26 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 		if !encrypt.BcryptCheck(req.Password, *user.Password) {
 			return nil, errorx.NewCodeInvalidArgumentError("login.wrongUsernameOrPassword")
 		}
+		// 获取 position id
+		userData, err := l.svcCtx.CoreRpc.GetUserList(l.ctx, &core.UserListReq{
+			Username: &req.Username,
+		})
+		if err != nil {
+			return nil, err
+		}
+		// 将整数切片转换为字符串切片
+		var stringSlice []string
+		for _, num := range userData.Data[0].PositionIds {
+			stringSlice = append(stringSlice, strconv.Itoa(int(num)))
+		}
+		// 使用 strings.Join 将字符串切片转换为逗号隔开的字符串
+		positionIds := strings.Join(stringSlice, ",")
 
+		//fmt.Println(userData.Data[0].PositionIds)
 		token, err := jwt.NewJwtToken(l.svcCtx.Config.Auth.AccessSecret, time.Now().Unix(),
 			l.svcCtx.Config.Auth.AccessExpire, jwt.WithOption("userId", user.Id), jwt.WithOption("roleId",
 				strings.Join(user.RoleCodes, ",")), jwt.WithOption("deptId", user.DepartmentId),
-			jwt.WithOption("regionId", req.RegionId))
+			jwt.WithOption("regionId", req.RegionId), jwt.WithOption("positionIds", positionIds))
 		if err != nil {
 			return nil, err
 		}
