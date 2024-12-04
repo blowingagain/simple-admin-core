@@ -55,7 +55,7 @@ func (l *RefreshTokenLogic) RefreshToken() (resp *types.RefreshTokenResp, err er
 
 	token, err := jwt.NewJwtToken(l.svcCtx.Config.Auth.AccessSecret, time.Now().Unix(),
 		int64(l.svcCtx.Config.ProjectConf.RefreshTokenPeriod)*60*60, jwt.WithOption("userId", userId), jwt.WithOption("roleId",
-			strings.Join(roleIds, ",")), jwt.WithOption("deptId", userData.DepartmentId))
+			strings.Join(roleIds, ",")), jwt.WithOption("deptId", userData.DepartmentId), jwt.WithOption("positionIds", userData.PositionIds))
 	if err != nil {
 		return nil, err
 	}
