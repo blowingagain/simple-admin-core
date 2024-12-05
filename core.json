@@ -1732,6 +1732,24 @@
         }
       }
     },
+    "/position/list/personal": {
+      "post": {
+        "description": "Get position list personal | 获取职位列表-个人用户版本",
+        "tags": [
+          "position"
+        ],
+        "summary": "Get position list personal | 获取职位列表-个人用户版本",
+        "operationId": "GetPositionListPersonal",
+        "responses": {
+          "200": {
+            "description": "PositionListResp",
+            "schema": {
+              "$ref": "#/definitions/PositionListResp"
+            }
+          }
+        }
+      }
+    },
     "/position/update": {
       "post": {
         "description": "Update position information | 更新职位",

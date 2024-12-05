@@ -24,7 +24,7 @@ type (
         Remark *string `json:"remark,optional" validate:"omitempty,max=200"`
     }
 
-    // The response data of position list | 职位列表数据
+        // The response data of position list | 职位列表数据
     PositionListResp {
         BaseDataInfo
 
@@ -32,15 +32,15 @@ type (
         Data PositionListInfo `json:"data"`
     }
 
-    // Position list data | 职位列表数据
+        // Position list data | 职位列表数据
     PositionListInfo {
         BaseListInfo
 
         // The API list data | 职位列表数据
-        Data  []PositionInfo  `json:"data"`
+        Data []PositionInfo `json:"data"`
     }
 
-    // Get position list request params | 职位列表请求参数
+        // Get position list request params | 职位列表请求参数
     PositionListReq {
         PageInfo
 
@@ -54,7 +54,7 @@ type (
         Remark *string `json:"remark,optional" validate:"omitempty,max=200"`
     }
 
-    // Position information response | 职位信息返回体
+        // Position information response | 职位信息返回体
     PositionInfoResp {
         BaseDataInfo
 
@@ -85,6 +85,10 @@ service Core {
     // Get position list | 获取职位列表
     @handler getPositionList
     post /position/list (PositionListReq) returns (PositionListResp)
+
+    // Get position list personal | 获取职位列表-个人用户版本
+    @handler getPositionListPersonal
+    post /position/list/personal returns (PositionListResp)
 
     // Get position by ID | 通过ID获取职位
     @handler getPositionById

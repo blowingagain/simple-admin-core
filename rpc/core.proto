@@ -277,6 +277,7 @@ message PositionListReq {
   optional string name = 3;
   optional string code = 4;
   optional string remark = 5;
+  repeated uint64 ids = 6;
 }
 
 message PositionListResp {

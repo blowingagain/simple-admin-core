@@ -40,6 +40,9 @@ func (l *GetPositionListLogic) GetPositionList(in *core.PositionListReq) (*core.
 	if in.Remark != nil {
 		predicates = append(predicates, position.RemarkContains(*in.Remark))
 	}
+	if len(in.Ids) > 0 {
+		predicates = append(predicates, position.IDIn(in.Ids...))
+	}
 	result, err := l.svcCtx.DB.Position.Query().Where(predicates...).Page(l.ctx, in.Page, in.PageSize)
 	if err != nil {
 		return nil, dberrorhandler.DefaultEntError(l.Logger, err, in)
