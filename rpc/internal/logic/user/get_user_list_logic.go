@@ -42,6 +42,11 @@ func (l *GetUserListLogic) GetUserList(in *core.UserListReq) (*core.UserListResp
 		predicates = append(predicates, user.UsernameContains(*in.Username))
 	}
 
+	// 严格模式：给登录后获取用户positionIds使用【售电公司】
+	if in.UsernameStrict != nil {
+		predicates = append(predicates, user.UsernameEQ(*in.UsernameStrict))
+	}
+
 	if in.Email != nil {
 		predicates = append(predicates, user.EmailEQ(*in.Email))
 	}

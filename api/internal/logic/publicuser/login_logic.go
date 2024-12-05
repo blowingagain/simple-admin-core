@@ -57,7 +57,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 		}
 		// 获取 position id
 		userData, err := l.svcCtx.CoreRpc.GetUserList(l.ctx, &core.UserListReq{
-			Username: &req.Username,
+			UsernameStrict: &req.Username,
 		})
 		if err != nil {
 			return nil, err
