@@ -9,6 +9,7 @@ import (
 	"github.com/suyuan32/simple-admin-common/utils/pointy"
 	"github.com/suyuan32/simple-admin-core/rpc/types/core"
 	"github.com/zeromicro/go-zero/core/errorx"
+	"strconv"
 	"strings"
 	"time"
 
@@ -62,10 +63,18 @@ func (l *LoginBySmsLogic) LoginBySms(req *types.LoginBySmsReq) (resp *types.Logi
 			return nil, errorx.NewCodeInvalidArgumentError("login.userBanned")
 		}
 
+		// 将整数切片转换为字符串切片
+		var stringSlice []string
+		for _, num := range userData.Data[0].PositionIds {
+			stringSlice = append(stringSlice, strconv.Itoa(int(num)))
+		}
+		// 使用 strings.Join 将字符串切片转换为逗号隔开的字符串
+		positionIds := strings.Join(stringSlice, ",")
+
 		token, err := jwt.NewJwtToken(l.svcCtx.Config.Auth.AccessSecret, time.Now().Unix(),
 			l.svcCtx.Config.Auth.AccessExpire, jwt.WithOption("userId", userData.Data[0].Id), jwt.WithOption("roleId",
 				strings.Join(userData.Data[0].RoleCodes, ",")), jwt.WithOption("deptId", userData.Data[0].DepartmentId),
-			jwt.WithOption("regionId", req.RegionId), jwt.WithOption("positionIds", userData.Data[0].PositionIds))
+			jwt.WithOption("regionId", req.RegionId), jwt.WithOption("positionIds", positionIds))
 		if err != nil {
 			return nil, err
 		}
