@@ -31,9 +31,9 @@ func NewGetMenuListByRoleLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 func (l *GetMenuListByRoleLogic) GetMenuListByRole() (resp *types.MenuListResp, err error) {
-	roleId, _ := l.ctx.Value("roleId").(string)
+	roleIdSelect, _ := l.ctx.Value("roleId").(string)
 	// 将当前角色的id转为数组
-	roleIds := strings.Split(roleId, ",")
+	roleIds := strings.Split(roleIdSelect, ",")
 	// 2024-10-25 新增区域id 用于对菜单的加载对应其关联的省份
 	regionId := int64(999)
 	if jsonUid, ok := l.ctx.Value("regionId").(json.Number); ok {
@@ -44,6 +44,7 @@ func (l *GetMenuListByRoleLogic) GetMenuListByRole() (resp *types.MenuListResp, 
 		}
 	}
 	// 如果为管理员 && 选择的为全国-0，则不做处理
+	roleId := ""
 	if strings.Contains(roleId, "000") && regionId == 0 {
 		roleId = "000"
 	} else {
